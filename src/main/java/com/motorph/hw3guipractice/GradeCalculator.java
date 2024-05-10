@@ -98,19 +98,43 @@ public class GradeCalculator extends JFrame {
         // Add an ActionListener to the button
         calculateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try{
                 // Instantiate Student class
-                Student stud = new Student();
-               
-                // Assign textfield values to stud object
-                stud.setStudentName(txtStudentName.getText());
-                stud.setStudentNumber(txtStudentNo.getText());
-                stud.setMilestone1(Float.parseFloat(txtMilestone1.getText()));
-                stud.setMilestone2(Float.parseFloat(txtMilestone2.getText()));
-                stud.setTA(Float.parseFloat(txtTerminalAssessment.getText()));
-               
-                // Instantiate and call GradeOutput class
-                GradeOutput output = new GradeOutput(stud);
-                output.setVisible(true);
+                    Student stud = new Student();
+
+                    // Assign textfield values to stud object
+                    stud.setStudentName(txtStudentName.getText());
+                    stud.setStudentNumber(txtStudentNo.getText());
+                    
+                    
+                    float milestone1 = Float.parseFloat(txtMilestone1.getText());
+                    if (milestone1 < 0 || milestone1 > 25) {
+                        throw new IllegalArgumentException("Milestone 1 grade should be between 0 and 25.");
+                    }
+                    stud.setMilestone1(milestone1);
+
+                    float milestone2 = Float.parseFloat(txtMilestone2.getText());
+                    if (milestone2 < 0 || milestone2 > 40) {
+                        throw new IllegalArgumentException("Milestone 2 grade should be between 0 and 40.");
+                    }
+                    stud.setMilestone2(milestone2);
+
+                    float terminalAssessment = Float.parseFloat(txtTerminalAssessment.getText());
+                    if (terminalAssessment < 0 || terminalAssessment > 35) {
+                        throw new IllegalArgumentException("Terminal Assessment grade should be between 0 and 35.");
+                    }
+                    stud.setTA(terminalAssessment);
+
+                    // Instantiate and call GradeOutput class
+                    GradeOutput output = new GradeOutput(stud);
+                    output.setVisible(true);
+                } catch (NumberFormatException ex) {
+                    // Handle NumberFormatException (e.g., when parsing floats)
+                    JOptionPane.showMessageDialog(GradeCalculator.this, "Please enter valid numeric grades.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    // Handle IllegalArgumentException (e.g., when grades are out of range)
+                    JOptionPane.showMessageDialog(GradeCalculator.this, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
